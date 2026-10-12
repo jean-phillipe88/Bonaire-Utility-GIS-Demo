@@ -153,7 +153,23 @@ var doHover = false;
 function createPopupField(currentFeature, currentFeatureKeys, layer) {
     var popupText = '';
     for (var i = 0; i < currentFeatureKeys.length; i++) {
-        if (currentFeatureKeys[i] != 'geometry' &&
+        if (currentFeatureKeys[i] == 'energy_consumption'){
+            popupText += '<div class="digital-meter-container">' +
+            '<div class="digital-meter-label">Power Meter</div>' +
+            '<div class="digital-meter-value">' + currentFeature.get(currentFeatureKeys[i]) + 
+                '<span class="digital-meter-unit">kWh</span>' +
+            '</div>' +
+        '</div>';
+        }
+        if (currentFeatureKeys[i] == 'water_consumption'){
+            popupText += '<div class="digital-meter-container">' +
+            '<div class="digital-meter-label">Water Meter</div>' +
+            '<div class="digital-meter-value">' + currentFeature.get(currentFeatureKeys[i]) + 
+                '<span class="digital-meter-unit">m3</span>' +
+            '</div>' +
+        '</div>';
+        }
+        else if (currentFeatureKeys[i] != 'geometry' &&
             currentFeatureKeys[i] != 'layerObject' &&
             currentFeatureKeys[i] != 'idO' &&
             currentFeatureKeys[i] != '_mvtLayer_') {

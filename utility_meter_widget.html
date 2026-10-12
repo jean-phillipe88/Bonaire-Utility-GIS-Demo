@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standalone Infrastructure Dashboard (Mockup)</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --power-color: #f59e0b;
+            --water-color: #0ea5e9;
+            --border-color: #334155;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .dash-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, #243249, var(--bg-card));
+        }
+
+        .dash-header h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .dash-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .dash-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .meta-card {
+            background-color: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .meta-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .asset-id {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .asset-address {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .metric-card {
+            background-color: rgba(15, 23, 42, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.01em;
+        }
+
+        .metric-value.power { color: var(--power-color); }
+        .metric-value.water { color: var(--water-color); }
+
+        .metric-total {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            border-top: 1px solid rgba(51, 65, 85, 0.7);
+            padding-top: 8px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="dash-header">
+            <h1>Infrastructure Node</h1>
+            <div class="dash-subtitle">
+                <span class="live-indicator"></span> Real-time Simulation Feed
+            </div>
+        </div>
+
+        <div class="dash-content">
+            <!-- Asset Context -->
+            <div class="meta-card">
+                <div class="meta-title">Asset Configuration</div>
+                <div id="asset-id" class="asset-id">SYS-NODE-DEFAULT</div>
+                <div id="asset-address" class="asset-address">Standard Distribution Grid Layer</div>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metric-grid">
+                <!-- Power Component -->
+                <div class="metric-card">
+                    <div class="metric-label">⚡ Current Power Demand</div>
+                    <div id="power-current" class="metric-value power">0.00 <span style="font-size:14px; font-weight:500;">kW</span></div>
+                    <div id="power-total" class="metric-total">Accumulated: 1,240.50 kWh</div>
+                </div>
+
+                <!-- Water Component -->
+                <div class="metric-card">
+                    <div class="metric-label">💧 Active Water Flow</div>
+                    <div id="water-current" class="metric-value water">0.0 <span style="font-size:14px; font-weight:500;">L/m</span></div>
+                    <div id="water-total" class="metric-total">Accumulated: 8,432.1 L</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set dynamic baselines parsing URL query components if available
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const assetName = urlParams.get('asset') || 'SYS-NODE-DEFAULT';
+        const assetAddr = urlParams.get('address') || 'Standard Distribution Grid Layer';
+        
+        // Parse float rates or apply standard fallback limits
+        const basePowerLoad = parseFloat(urlParams.get('power_base')) || 1.85; 
+        const baseWaterFlow = parseFloat(urlParams.get('water_base')) || 12.40; 
+
+        // Update the UI Header contextual cards immediately
+        document.getElementById('asset-id').innerText = assetName;
+        document.getElementById('asset-address').innerText = assetAddr.replace(/-/g, ' ');
+
+        // Initialize incremental rolling states with realistic base meters
+        let runningPowerTotal = 1240.50;
+        let runningWaterTotal = 8432.10;
+
+        function runMockupTick() {
+            // Apply slight ambient updates to keep values dynamic
+            const powerFluctuation = (Math.random() - 0.5) * 0.15;
+            const waterFluctuation = (Math.random() - 0.5) * 0.85;
+
+            const instantaneousPower = Math.max(0.05, basePowerLoad + powerFluctuation);
+            const instantaneousWater = Math.max(0.00, baseWaterFlow + waterFluctuation);
+
+            // Increment values continuously upward over time
+            runningPowerTotal += (instantaneousPower / 3600) * 12; // Scaled upward slightly for faster visibility
+            runningWaterTotal += (instantaneousWater / 60) * 2;
+
+            // Render output values directly
+            document.getElementById('power-current').innerHTML = `${instantaneousPower.toFixed(2)} <span style="font-size:14px; font-weight:500;">kW</span>`;
+            document.getElementById('power-total').innerText = `Accumulated: ${runningPowerTotal.toFixed(2)} kWh`;
+
+            document.getElementById('water-current').innerHTML = `${instantaneousWater.toFixed(1)} <span style="font-size:14px; font-weight:500;">L/m</span>`;
+            document.getElementById('water-total').innerText = `Accumulated: ${runningWaterTotal.toFixed(1)} L`;
+        }
+
+        // Loop ticks continuously every 1000ms
+        setInterval(runMockupTick, 1000);
+        runMockupTick(); // Run initial execution step immediately
+    </script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Distribution Board Schematic</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --power-accent: #f59e0b;
+            --water-accent: #0ea5e9;
+            --color-safe: #22c55e;
+            --color-danger: #ef4444;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .widget-wrapper {
+            width: 100%;
+            max-width: 460px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+        }
+
+        .widget-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .widget-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(34, 197, 94, 0.15);
+            color: var(--color-safe);
+        }
+
+        .status-pill.tripped {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--color-danger);
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: currentColor;
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+        }
+
+        /* SVG Schematic Container Layout */
+        .schematic-box {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-width: 380px;
+        }
+
+        /* Interactive Switch Toggles styling */
+        .breaker-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-row {
+            background-color: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.15s ease;
+        }
+
+        .control-row:hover {
+            background-color: rgba(15, 23, 42, 0.5);
+        }
+
+        .label-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sub-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Pure CSS Toggle Switch Graphics */
+        .toggle-track {
+            width: 44px;
+            height: 24px;
+            background-color: var(--color-danger);
+            border-radius: 12px;
+            position: relative;
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .toggle-handle {
+            width: 18px;
+            height: 18px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .active .toggle-track {
+            background-color: var(--color-safe);
+        }
+
+        .active .toggle-handle {
+            transform: translateX(20px);
+        }
+
+        /* Animation Flow Schemes */
+        .flow-line {
+            stroke-dasharray: 6 4;
+            animation: flow-run 1s linear infinite;
+            transition: stroke 0.2s ease, opacity 0.2s ease;
+        }
+
+        .flow-line.static {
+            stroke-dasharray: none;
+            animation: none;
+        }
+
+        @keyframes flow-run {
+            to { stroke-dashoffset: -10; }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget-wrapper">
+        <div class="widget-header">
+            <h2>MDB-04 Panel Architecture</h2>
+            <div id="global-status" class="status-pill">
+                <span class="pulse-dot"></span><span id="status-text">Operational</span>
+            </div>
+        </div>
+
+        <!-- 1. TECHNICAL VECTOR SCHEMATIC VIEW -->
+        <div class="schematic-box">
+            <svg viewBox="0 0 360 220" fill="none" xmlns="http://w3.org">
+                <!-- Enclosure Background Block -->
+                <rect x="5" y="5" width="350" height="210" rx="10" fill="#090d16" stroke="#334155" stroke-width="2"/>
+                <line x1="5" y1="45" x2="355" y2="45" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4 4"/>
+                
+                <!-- Ground / Neutral Structural Copper Bar -->
+                <rect x="20" y="15" width="320" height="8" rx="2" fill="#334155"/>
+                <circle cx="40" cy="19" r="2" fill="#94a3b8"/>
+                <circle cx="180" cy="19" r="2" fill="#94a3b8"/>
+                <circle cx="320" cy="19" r="2" fill="#94a3b8"/>
+                <text x="25" y="11" fill="#475569" font-family="sans-serif" font-size="7" font-weight="700">GROUND CHASSIS RAIL</text>
+
+                <!-- Dynamic Flow Wire Traces -->
+                <!-- Main Feed -> Main Breaker -->
+                <path id="wire-main" class="flow-line" d="M 180 15 L 180 65" stroke="#f59e0b" stroke-width="2"/>
+                
+                <!-- Main Breaker -> Left & Right Bus Channels -->
+                <path id="wire-left-bus" class="flow-line" d="M 155 105 L 65 105 L 65 125" stroke="#f59e0b" stroke-width="2"/>
+                <path id="wire-right-bus" class="flow-line" d="M 205 105 L 295 105 L 295 125" stroke="#f59e0b" stroke-width="2"/>
+
+                <!-- Sub-grid Outgoing Feeds -->
+                <path id="wire-power-out" class="flow-line" d="M 65 175 L 65 215" stroke="#f59e0b" stroke-width="2"/>
+                <path id="wire-water-out" class="flow-line" d="M 295 175 L 295 215" stroke="#0ea5e9" stroke-width="2"/>
+
+                <!-- BREAKER MODULE: Main Input -->
+                <g id="svg-breaker-main">
+                    <rect x="145" y="55" width="70" height="50" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                    <rect id="node-switch-main" x="173" y="65" width="14" height="20" rx="2" fill="#22c55e"/>
+                    <text x="180" y="100" fill="#f8fafc" font-family="sans-serif" font-size="9" text-anchor="middle" font-weight="600">MAIN 100A</text>
+                </g>
+
+                <!-- BREAKER MODULE: Power Grid -->
+                <g id="svg-breaker-power">
+                    <rect x="30" y="125" width="70" height="50" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                    <rect id="node-switch-power" x="58" y="135" width="14" height="20" rx="2" fill="#22c55e"/>
+                    <text x="65" y="170" fill="#94a3b8" font-family="sans-serif" font-size="8" text-anchor="middle" font-weight="600">PWR GRID</text>
+                </g>
+
+                <!-- BREAKER MODULE: Water Controller -->
+                <g id="svg-breaker-water">
+                    <rect x="260" y="125" width="70" height="50" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+                    <rect id="node-switch-water" x="288" y="135" width="14" height="20" rx="2" fill="#22c55e"/>
+                    <text x="295" y="170" fill="#94a3b8" font-family="sans-serif" font-size="8" text-anchor="middle" font-weight="600">WTR PUMP</text>
+                </g>
+            </svg>
+        </div>
+
+        <!-- 2. INTERACTIVE HARDWARE SWITCH CONTROLS -->
+        <div class="breaker-group">
+            <!-- Main Interrupter Toggle -->
+            <div id="row-main" class="control-row active" onclick="toggleBreaker('main')">
+                <div class="label-block">
+                    <span class="main-label">Master Disconnect Switch</span>
+                    <span class="sub-label">Interrupts entire downstream node infrastructure</span>
+                </div>
+                <div class="toggle-track"><div class="toggle-handle"></div></div>
+            </div>
+
+            <!-- Power Relay Toggle -->
+            <div id="row-power" class="control-row active" onclick="toggleBreaker('power')">
+                <div class="label-block">
+                    <span class="main-label">⚡ Power Load Transformer Relay</span>
+                    <span class="sub-label">Controls current feeding into secondary circuits</span>
+                </div>
